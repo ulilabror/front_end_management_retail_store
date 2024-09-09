@@ -14,13 +14,13 @@ export default function ProductCard({ product }) {
                 {product.product_name}
             </h3>
             <p className="mt-1 text-gray-700 dark:text-gray-300">SKU: {product.product_sku}</p>
-            <p className="mt-1 text-gray-700 dark:text-gray-300">Rp.{product.product_price}</p>
-            <Link
-                to={`/product/${product.product_barcode_id}`}
+            <p className="mt-1 text-gray-700 dark:text-gray-300">Rp.{product.price}</p>
+            <a
+                href={`/product/${product.id}`}
                 className="mt-4 block text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
             >
                 View Details
-            </Link>
+            </a>
         </div>
     );
 }

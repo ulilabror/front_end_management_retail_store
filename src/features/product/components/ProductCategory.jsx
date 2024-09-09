@@ -8,7 +8,7 @@ export default function ProductCategory({ title, products }) {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{title}</h2>
             <ProductScrollHorizontalList>
                 {products.map((product) => (
-                    <ProductCard key={product.product_barcode_id} product={product} />
+                    <ProductCard key={product.id} product={product} />
                 ))}
             </ProductScrollHorizontalList>
         </div>

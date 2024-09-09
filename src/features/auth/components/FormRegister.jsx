@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth'; // Pastikan path ini sesuai dengan struktur folder Anda
 
 export default function FormRegister() {
@@ -8,18 +8,37 @@ export default function FormRegister() {
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [roleId, setRoleId] = useState('');
-    const { register, error, loading } = useAuth();
+    const [showPopup, setShowPopup] = useState(false);
+    const { register, errors, loading, user } = useAuth();
+    const navigateTo = useNavigate();
 
-    const handleSignUp = (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();
-        register(name, email, password, phone, roleId);
+        await register(name, email, password, phone, roleId);
     };
+    useEffect(() => {
+        // Cek jika user sudah ada, tampilkan popup dan redirect
+        if (user) {
+            setShowPopup(true);
+            setTimeout(() => {
+                setShowPopup(false);
+                navigateTo('/login');
+            }, 3000);
+        }
+    }, [user, navigateTo]);
+
 
     return (
         <div className="min-h-screen py-6 flex items-center justify-center bg-gray-100 dark:bg-gray-800 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white">Sign Up</h2>
-                {error && <p className="text-red-500">{error}</p>}
+                {errors && errors.length > 0 && (
+                    <ul className="text-red-500">
+                        {errors.map((error, index) => (
+                            <li key={index}>{error}</li>
+                        ))}
+                    </ul>
+                )}
                 <form className="space-y-6" onSubmit={handleSignUp}>
                     <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
@@ -94,6 +113,13 @@ export default function FormRegister() {
                         </Link>
                     </div>
                 </form>
+                {showPopup && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-4 rounded shadow-lg">
+                            <p className="text-green-500">Registration successful! Redirecting to login...</p>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

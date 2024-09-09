@@ -1,28 +1,22 @@
-import { useParams } from 'react-router-dom';
-// Core modules imports are same as usual
 import { Pagination, Scrollbar, Navigation, A11y } from 'swiper/modules';
-// Direct React component imports
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import { useAuth } from '../../../features/auth/hooks/useAuth'; // Assuming you have this hook for auth
+
 
 export default function ProductDetail({ product }) {
-
+    const { token } = useAuth();
     if (!product) {
-        return (<>
+        return (
             <section className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-800">
                 <div className="text-center text-gray-700 dark:text-gray-300">
                     <h2 className="text-2xl font-bold mb-4">Product not found</h2>
                     <p className="text-lg">We couldn't find the product you're looking for.</p>
                 </div>
             </section>
-
-        </>
         );
     }
 
@@ -62,6 +56,18 @@ export default function ProductDetail({ product }) {
             <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">Created by: {product.created_by}</p>
             <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Created at: {new Date(product.created_at).toLocaleDateString()}</p>
             <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Updated at: {new Date(product.updated_at).toLocaleDateString()}</p>
+
+            {/* Conditionally render buttons if user is logged in */}
+            {token && (
+                <div className="mt-6 flex space-x-4">
+                    <button className="py-2 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md">
+                        Buy Now
+                    </button>
+                    <button className="py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md">
+                        Add to Cart
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

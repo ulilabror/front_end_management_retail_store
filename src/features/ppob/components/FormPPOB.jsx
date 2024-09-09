@@ -1,19 +1,19 @@
-// form (input)
-
 import React from "react";
 
-const FormNumberInput = ({ judul, jumlahInput }) => {
+const FormPPOB = ({ formFields, onFormChange }) => {
     const handleInputChange = (e, index) => {
-        const value = e.target.value;
-        const formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        document.getElementById(`input-${index}`).value = formattedValue;
+
+        // Kirim data input dengan format titik
+        onFormChange({ [`formFields[${index}]`]: e.target.value });
+
+        // Update input field dengan format
+        document.getElementById(`input-${index}`).value = e.target.value;
     };
 
     return (
         <div className="w-full max-w-xl mx-auto p-4">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">{judul}</h2>
             <div className="space-y-4">
-                {Array.from({ length: jumlahInput }).map((_, index) => (
+                {formFields.map((field, index) => (
                     <input
                         key={index}
                         id={`input-${index}`}
@@ -22,7 +22,7 @@ const FormNumberInput = ({ judul, jumlahInput }) => {
                         pattern="[0-9]*"
                         className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
                         onChange={(e) => handleInputChange(e, index)}
-                        placeholder="Masukkan angka"
+                        placeholder={`Masukkan ${field}`}
                     />
                 ))}
             </div>
@@ -30,4 +30,4 @@ const FormNumberInput = ({ judul, jumlahInput }) => {
     );
 };
 
-export default FormNumberInput;
+export default FormPPOB;

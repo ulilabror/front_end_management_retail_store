@@ -5,20 +5,40 @@ export const useAuth = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
-  const login = (email, password) => {
-    dispatch(loginUser({ email, password }));
+  const login = async (email, password) => {
+    try {
+      const resultAction = await dispatch(loginUser({ email, password }));
+      if (loginUser.fulfilled.match(resultAction)) {
+        return resultAction.payload; // Sukses login
+      } else {
+        throw resultAction.payload; // Gagal login
+      }
+    } catch (error) {
+      return Promise.reject(error); // Return error ke komponen pemanggil
+    }
   };
 
   const signOut = () => {
     dispatch(logout());
   };
 
-  const register = (name, email, password, phone, role_id) => {
-    dispatch(registerUser({ name, email, password, phone, role_id }));
+  const register = async (name, email, password, phone, role_id) => {
+    try {
+      const resultAction = await dispatch(
+        registerUser({ name, email, password, phone, role_id })
+      );
+      if (registerUser.fulfilled.match(resultAction)) {
+        return resultAction.payload; // Sukses register
+      } else {
+        throw resultAction.payload; // Gagal register
+      }
+    } catch (error) {
+      return Promise.reject(error); // Return error ke komponen pemanggil
+    }
   };
 
   return {
-    ...auth,
+    ...auth, // Spread state dari auth
     login,
     signOut,
     register,

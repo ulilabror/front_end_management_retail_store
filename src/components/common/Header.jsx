@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from "react";
 import PopoverComponent from "./PopoverComponent";
+
+import { useAuth } from "../../features/auth/hooks/useAuth";
+
 import {
+  Button,
   Dialog,
   DialogPanel,
   Disclosure,
@@ -24,9 +28,9 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useToken } from "../../features/auth/hooks/useToken";
 
 // const productLabel = ;
-
 
 const callsToAction = [
   { name: "Watch demo", href: "#", icon: PlayCircleIcon },
@@ -36,6 +40,10 @@ const callsToAction = [
 export function Header({ navigation }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const { token, signOut } = useAuth();
+
+
+
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     console.log(savedTheme);
@@ -43,6 +51,7 @@ export function Header({ navigation }) {
       setDarkMode(true);
     }
   }, []);
+
 
   useEffect(() => {
     if (darkMode) {
@@ -69,6 +78,7 @@ export function Header({ navigation }) {
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                 className="h-8 w-auto"
               />
+              B
             </Link>
           </div>
           <div className="flex items-center lg:hidden">
@@ -112,12 +122,19 @@ export function Header({ navigation }) {
             ))}
           </PopoverGroup>
           <div className="hidden lg:flex lg:items-center lg:gap-x-6">
-            <Link
-              to="/login"
+            {!token ? (
+              <Link
+                to="/login"
+                className="text-sm pl-10 font-semibold leading-6 text-gray-900 dark:text-gray-100"
+              >
+                Log in <span aria-hidden="true">&rarr;</span>
+              </Link>
+            ) : (<Button
+              onClick={() => { signOut() }}
               className="text-sm pl-10 font-semibold leading-6 text-gray-900 dark:text-gray-100"
             >
-              Log in <span aria-hidden="true">&rarr;</span>
-            </Link>
+              Logout <span aria-hidden="true">&rarr;</span>
+            </Button>)}
             <button
               type="button"
               onClick={() => {
@@ -194,12 +211,30 @@ export function Header({ navigation }) {
                   ))}
                 </div>
                 <div className="py-6">
-                  <Link
-                    to="#"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  >
-                    Log in
-                  </Link>
+                  {
+                    !token ? (
+                      <>
+
+                        <Link
+                          to="/login"
+                          className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
+                        >
+                          Login
+                        </Link>
+                        <Link
+                          to="/register"
+                          className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
+                        >
+                          Daftar
+                        </Link>
+                      </>
+                    ) : (<Button
+                      onClick={signOut}
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    >
+                      Logout
+                    </Button>)
+                  }
                 </div>
               </div>
             </div>

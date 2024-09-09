@@ -1,45 +1,33 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { login, register } from "../services/authService";
 
 // Thunk untuk login
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/login",
-        credentials,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      return response.data;
+      const data = await login(credentials);
+      localStorage.setItem("token", data.data.authorization.token);
+      return data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error.response?.data || { message: "Login failed" }
+      );
     }
   }
 );
 
-// Thunk untuk registrasi
+// Thunk untuk register
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/register",
-        userData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response.data);
-      return response.data;
+      const data = await register(userData);
+      return data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error.response?.data || { message: "Registration failed" }
+      );
     }
   }
 );
@@ -48,49 +36,75 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
-    token: null,
+    token: localStorage.getItem("token") || null,
     loading: false,
-    error: null,
+    errors: [],
+    message: null,
   },
   reducers: {
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.errors = [];
+      state.message = null;
+      localStorage.removeItem("token");
+    },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+    setToken: (state, action) => {
+      state.token = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setError: (state, action) => {
+      state.errors = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
-      // Untuk login
+      // Login User
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.errors = [];
+        state.message = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.user = action.payload.data.user;
+        state.user = action.payload.data;
         state.token = action.payload.data.authorization.token;
         state.loading = false;
+        state.errors = [];
+        state.message = "Login successful";
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.message || "Login failed";
+        state.errors = action.payload.errors || [action.payload.message];
+        state.message = null;
       })
 
-      // Untuk registrasi
+      // Register User
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.errors = [];
+        state.user = null;
+        state.message = null;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.user = action.payload.data.user;
-        state.token = action.payload.data.authorization.token;
+        state.user = action.payload.data;
         state.loading = false;
+        state.errors = [];
+        state.message = "Registration successful";
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.message || "Registration failed";
+        state.errors = action.payload.errors || [action.payload.message];
+        state.user = null;
+        state.message = null;
       });
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setUser, setToken, setLoading, setError } =
+  authSlice.actions;
 export default authSlice.reducer;

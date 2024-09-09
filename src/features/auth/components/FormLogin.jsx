@@ -1,26 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom'; // Untuk navigasi antar route
+import { useToken } from '../hooks/useToken';
 
 const FormLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { login, error, loading } = useAuth();
+    const { login, errors, loading, token } = useAuth();
     const navigate = useNavigate(); // Hook untuk navigasi
 
     const [showPopup, setShowPopup] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [countdown, setCountdown] = useState(3);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        login(email, password);
 
-        if (error) {
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await login(email, password);
+    };
+
+    useEffect(() => {
+        // Jika ada token, simpan di localStorage dan navigasi ke halaman produk
+        if (token) {
+            navigate("/products");
+        }
+    }, [token, navigate]);
+
+    useEffect(() => {
+        if (errors && errors.length > 0) {
             setShowPopup(true);
             setIsButtonDisabled(true);
         }
-    };
+    }, [errors]);
 
     useEffect(() => {
         if (isButtonDisabled) {
@@ -34,7 +46,7 @@ const FormLogin = () => {
                 setCountdown(3);
             }
 
-            return () => clearInterval(timer);
+            return () => clearInterval(timer); // Membersihkan timer pada unmount
         }
     }, [isButtonDisabled, countdown]);
 
@@ -43,19 +55,7 @@ const FormLogin = () => {
             <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white">Login</h2>
                 <form className="space-y-6" onSubmit={handleSubmit}>
-                    {error && showPopup && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                            <div className="bg-white p-6 rounded-md shadow-md">
-                                <p className="text-red-500">{error}</p>
-                                <button
-                                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-                                    onClick={() => setShowPopup(false)}
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    )}
+                    {errors && <p className="text-red-500">{errors.join(', ')}</p>}
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Email Address
