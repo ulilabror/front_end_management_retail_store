@@ -29,7 +29,7 @@ export default function FormAddProduct() {
             formData.append('product_label', data.product_label);
             formData.append('product_sku', data.product_sku);
             formData.append('product_description', data.product_description);
-            formData.append('price', data.price);
+            formData.append('price', parseInt(data.price));
 
             // Append selected files
             selectedFiles.forEach((file, index) => {

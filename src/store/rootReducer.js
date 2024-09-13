@@ -1,10 +1,10 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/store/authSlice";
-// import productsReducer from "../features/products/store/productsSlice";
+import productReducer from "../features/product/store/productSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  //   products: productsReducer,
+  products: productReducer,
 });
 
 export default rootReducer;

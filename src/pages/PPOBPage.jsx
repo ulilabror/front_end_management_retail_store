@@ -2,6 +2,7 @@ import TabView from "../features/ppob/components/TabViewPPOB";
 import Layout from "../components/layouts/Layout";
 import Container from "../components/layouts/Container";
 import PaymentMethods from "../features/payment/components/PaymentMethods";
+import { ProductList } from "../features/ppob/components/productList";
 
 
 const tabs = [
@@ -17,7 +18,7 @@ const tabs = [
         image: "https://source.unsplash.com/featured/?mobile,phone",
         sublabel: ["XL", "TELKOMSEL", "Indosat", "Tri", "Smartfren"],
         text: "Pembelian voucher pulsa untuk berbagai operator seperti Simpati, XL, Indosat, IM3, dll.",
-        forms: ["id", "phone_number"] // Form untuk Pulsa (misalnya ID dan nomor telepon)
+        forms: ["phone_number"] // Form untuk Pulsa (misalnya ID dan nomor telepon)
     },
     {
         label: "Kuota",
