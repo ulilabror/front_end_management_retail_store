@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8000/api", // Ganti sesuai dengan URL API Anda
+  baseURL: "https://api.carisini.my.id/api", // Ganti sesuai dengan URL API Anda
 });
 
 // Fetch all products

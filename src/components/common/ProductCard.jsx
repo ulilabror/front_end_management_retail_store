@@ -1,10 +1,11 @@
 import currencyFormatter from "../../utils/CurrencyFormatter";
+import { Link } from "react-router-dom";
 export default function ProductCard({ product }) {
     return (
-        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 w-64 flex-shrink-0">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 w-64 h-96 flex-shrink-0">
             {product.files.length > 0 ? (
                 <img
-                    src={product.files[0]}
+                    src={product.files[0].url}
                     alt={product.product_name}
                     className="w-full h-48 object-cover rounded-md"
                 />
@@ -32,12 +33,12 @@ export default function ProductCard({ product }) {
             </h3>
             <p className="mt-1 text-gray-700 dark:text-gray-300">SKU: {product.product_sku}</p>
             <p className="mt-1 text-gray-700 dark:text-gray-300"> {currencyFormatter(product.price)}</p>
-            <a
-                href={`/product/${product.id}`}
+            <Link
+                to={`/product/${product.id}`}
                 className="mt-4 block text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
             >
-                View Details
-            </a>
+                Detail Product
+            </Link>
         </div>
     );
 }

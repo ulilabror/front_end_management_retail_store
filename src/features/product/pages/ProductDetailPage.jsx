@@ -8,6 +8,7 @@ import Container from '../../../components/layouts/Container';
 import { fetchProductById, fetchSearchProducts } from '../services/productService';
 import ProductList from '../components/ProductList';
 import LoadingScreen from '../../../components/common/loadingScreen';
+import ProductNotFound from '../components/ProductNotFound';
 
 export default function ProductDetailPage() {
     const { id } = useParams(); // Get the product ID from the URL
@@ -69,25 +70,14 @@ export default function ProductDetailPage() {
 
     if (error) {
         return (
-            <Layout>
-                <Section>
-                    <div className="text-center">
-                        <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-300">
-                            {error}
-                        </h2>
-                        <p className="mt-4 text-gray-500 dark:text-gray-400">
-                            The product you are looking for does not exist or has been removed.
-                        </p>
-                    </div>
-                </Section>
-            </Layout>
+           <ProductNotFound error={error} />
+           
         );
     }
 
     if (!product) {
         return <LoadingScreen />
     }
-
     return (
         <Layout>
             <Container>

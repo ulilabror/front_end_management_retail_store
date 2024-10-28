@@ -37,7 +37,7 @@ export default function ProductDetail({ product }) {
                     {product.files.map((image, index) => (
                         <SwiperSlide key={index}>
                             <img
-                                src={image}
+                                src={image.url}
                                 alt={`${product.product_name} ${index + 1}`}
                                 className="w-full h-64 object-cover rounded-lg"
                             />

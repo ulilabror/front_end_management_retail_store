@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchSearchProducts } from "../../product/services/productService";
+import CurrencyFormatter from "../../../utils/CurrencyFormatter";
 
 export const ProductList = ({ type, label }) => {
     // State untuk menyimpan produk, loading, dan error
@@ -46,36 +47,32 @@ export const ProductList = ({ type, label }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {products.length > 0 ? (
                     products.map((product, index) => (
-                        <div
+                        <label
                             key={index}
-                            className="bg-white dark:bg-gray-800 dark:text-white shadow-lg rounded-lg p-4 flex flex-col justify-between hover:shadow-xl transition-shadow duration-300 ease-in-out"
+                            onClick={() => handleSelectProduct(product.product_sku)} // Card klik memicu perubahan pilihan
+                            className={`cursor-pointer bg-white dark:bg-gray-800 dark:text-white shadow-lg rounded-lg p-4 flex flex-col justify-between hover:shadow-xl transition-shadow duration-300 ease-in-out ${
+                                selectedSKU === product.product_sku ? 'border border-indigo-600' : ''
+                            }`}
                         >
                             <div>
-                                {/* Image */}
-                                <img
-                                    src={product.image_url}
-                                    alt={product.name}
-                                    className="w-full h-48 object-cover rounded-t-lg"
-                                />
                                 {/* Product Information */}
-                                <h3 className="text-lg font-semibold mt-2 dark:text-gray-200">{product.name}</h3>
-                                <p className="text-gray-500 dark:text-gray-400 mt-1">SKU: {product.product_sku}</p>
-                                <p className="text-gray-700 dark:text-gray-300 mt-2">Price: ${product.price}</p>
+                                <h3 className="text-lg font-semibold mt-2 dark:text-gray-200">{product.product_name}</h3>
+                                <p className="text-gray-900 dark:text-gray-400 mt-1">SKU: {product.product_sku}</p>
+                                <p className="text-gray-900 dark:text-gray-300 mt-2">Price: {CurrencyFormatter(product.price)}</p>
                             </div>
+
                             <div className="mt-4">
-                                {/* Radio Button */}
-                                <label className="flex items-center space-x-2">
-                                    <input
-                                        type="radio"
-                                        value={product.product_sku}
-                                        checked={selectedSKU === product.product_sku}
-                                        onChange={() => handleSelectProduct(product.product_sku)}
-                                        className="form-radio h-5 w-5 text-blue-600 dark:text-blue-400 transition duration-150 ease-in-out"
-                                    />
-                                    <span className="dark:text-gray-300">Select this product</span>
-                                </label>
+                                {/* Radio Button Hidden */}
+                                <input
+                                    type="radio"
+                                    value={product.product_sku}
+                                    checked={selectedSKU === product.product_sku}
+                                    onChange={() => handleSelectProduct(product.product_sku)}
+                                    className="hidden"
+                                />
+                                <span className="text-gray-900 dark:text-gray-100">Select this product</span>
                             </div>
-                        </div>
+                        </label>
                     ))
                 ) : (
                     <p>No products found for the given type and label.</p> // Jika tidak ada produk ditemukan

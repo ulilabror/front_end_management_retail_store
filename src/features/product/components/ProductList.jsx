@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProducts } from '../services/productService';
 import ProductCard from '../../../components/common/ProductCard';
+import LoadingScreen from '../../../components/common/loadingScreen';
 
 export default function ProductList() {
     const [products, setProducts] = useState([]);
@@ -40,14 +41,18 @@ export default function ProductList() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isFetchingMore, pagination]);
 
-    if (loading && page === 1) return <p>Loading...</p>;
+    if (loading && page === 1) return <LoadingScreen />;
     if (error) return <p>Error loading products: {error.message}</p>;
 
     return (
-        <div className="bg-gray-100 dark:bg-gray-800 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-            {products.map((product, index) => (
-                <ProductCard key={index} product={product} />
-            ))}
+        <div className="bg-gray-100 min-h-screen dark:bg-gray-800 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+            {products.length > 0 ? (
+                products.map((product, index) => (
+                    <ProductCard key={index} product={product} />
+                ))
+            ) : (
+                <p className="col-span-full text-center text-gray-500 dark:text-gray-400">Product empty</p>
+            )}
             {isFetchingMore && <p>Loading more products...</p>}
         </div>
     );

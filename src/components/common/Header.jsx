@@ -65,7 +65,7 @@ export function Header({ navigation }) {
 
   return (
     <>
-      <header className="bg-white dark:bg-gray-900">
+      <header className="bg-white screen dark:bg-gray-900">
         <nav
           aria-label="Global"
           className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
@@ -75,10 +75,9 @@ export function Header({ navigation }) {
               <span className="sr-only">CariSini.my.id</span>
               <img
                 alt=""
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                src="/2.png"
                 className="h-8 w-auto"
               />
-              B
             </Link>
           </div>
           <div className="flex items-center lg:hidden">

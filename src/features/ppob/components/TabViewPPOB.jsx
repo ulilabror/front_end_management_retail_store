@@ -68,7 +68,7 @@ const TabView = ({ tabs }) => {
                                 {tab.sublabel.map((sublabel, subIndex) => (
                                     <label
                                         key={subIndex}
-                                        className={`block w-48 p-2 text-center rounded-lg cursor-pointer border-2 transition-colors ${selectedSublabel[index] === sublabel
+                                        className={`block text-gray-100 w-48 p-2 text-center rounded-lg cursor-pointer border-2 transition-colors ${selectedSublabel[index] === sublabel
                                             ? "border-indigo-600 bg-indigo-50 dark:bg-indigo-600 dark:text-white"
                                             : "border-gray-300 bg-white dark:bg-gray-800 dark:text-gray-300"
                                             }`}
@@ -81,7 +81,7 @@ const TabView = ({ tabs }) => {
                                             onChange={() => handleSublabelChange(index, sublabel)}
                                             className="hidden"
                                         />
-                                        <span className="text-lg font-medium">{sublabel}</span>
+                                        <span className="text-lg text-black dark:text-white font-medium">{sublabel}</span>
                                     </label>
                                 ))}
                             </div>
